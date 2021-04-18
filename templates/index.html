@@ -1,0 +1,192 @@
+{% load static %}
+{% load calc_total %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- formset plugin and jQuery dependency -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="{% static 'jquery/jquery.formset.js' %}"></script>
+  <!-- tempus-dominus bootstrap and jQuery dependency -->
+  {{ invoice_form.media }}
+
+  <!-- javascript -->
+  <script src="{% static 'javascript/script.js' %}"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href=" {% static 'css/style.css' %}">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+  <!-- Bootstrap Web font -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
+  <title>Invoice Generator</title>
+</head>
+<body>
+
+<form action="{% url 'invoice' %}" method="post">
+  {% csrf_token %}
+  <div class="container">
+    <div class="row">
+      <!-- BEGIN INVOICE -->
+      <div class="col-12">
+        <div class="grid invoice">
+          <div class="grid-body">
+            <div class="invoice-title">
+              <!-- BEGIN LOGO -->
+              <div class="row">
+                <div class="col-12">
+                  {{ invoice_form.invoice_logo|add_class:"form-control" }}
+                  <div class="container p-3">
+                    <img id="logo" src="" class="img-fluid"/>
+                  </div>
+                </div>
+              </div>
+              <!-- END LOGO -->
+              <br>
+              <!-- BEGIN HEADER -->
+              <div class="row">
+                <div class="col-12">
+
+                  <label for="{{ invoice_form.invoice_description.id_for_label }}">
+                    {{ invoice_form.invoice_description.label }}
+                  </label>
+                  {{ invoice_form.invoice_description|add_class:"form-control" }}
+
+                  <br>
+
+                  <label for="{{ invoice_form.invoice_number.id_for_label }}">
+                    {{ invoice_form.invoice_number.label }}
+                  </label>
+                  {{ invoice_form.invoice_number|add_class:"form-control" }}
+
+                  <br>
+
+                  <label for="{{ invoice_form.invoice_date.id_for_label }}">
+                    {{ invoice_form.invoice_date.label }}
+                  </label>
+                  {{ invoice_form.invoice_date }}
+
+                  <br>
+
+                  <label for="{{ invoice_form.invoice_due_date.id_for_label }}">
+                    {{ invoice_form.invoice_due_date.label }}
+                  </label>
+                  {{ invoice_form.invoice_due_date }}
+
+                </div>
+                <!-- END HEADER -->
+              </div>
+              <hr>
+              <div class="row">
+                <!-- BEGIN YOUR COMPANY INFO -->
+                <div class="col-6">
+                  <address>
+                    <strong>From:</strong><br>
+
+                    <label for="{{ invoice_form.business_name.id_for_label }}">
+                      {{ invoice_form.business_name.label }}
+                    </label>
+                    {{ invoice_form.business_name|add_class:"form-control" }}
+
+                    <br>
+
+                    <label for="{{ invoice_form.business_email.id_for_label }}">
+                      {{ invoice_form.business_email.label }}
+                    </label>
+                    {{ invoice_form.business_email|add_class:"form-control" }}
+
+                    <br>
+
+                    <label for="{{ invoice_form.business_address.id_for_label }}">
+                      {{ invoice_form.business_address.label }}
+                    </label>
+                    {{ invoice_form.business_address|add_class:"form-control" }}
+
+                  </address>
+                </div>
+                <!-- END YOUR COMPANY INFO -->
+                <!-- BEGIN CLIENT COMPANY INFO -->
+                <div class="col-6">
+                  <address>
+
+                    <strong>Bill to:</strong><br>
+
+                    <label for="{{ invoice_form.client_name.id_for_label }}">
+                      {{ invoice_form.client_name.label }}
+                    </label>
+                    {{ invoice_form.client_name|add_class:"form-control" }}
+                    <br>
+
+                    <label for="{{ invoice_form.client_email.id_for_label }}">
+                      {{ invoice_form.client_email.label }}
+                    </label>
+                    {{ invoice_form.client_email|add_class:"form-control" }}
+                    <br>
+
+                    <label for="{{ invoice_form.client_address.id_for_label }}">
+                      {{ invoice_form.client_address.label }}
+                    </label>
+                    {{ invoice_form.client_address|add_class:"form-control" }}
+
+                  </address>
+                </div>
+                <!-- END CLIENT COMPANY INFO -->
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <h3>ORDER SUMMARY</h3>
+                  <table class="table table-striped">
+                    <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col" class="text-center"><strong>DESCRIPTION</strong></th>
+                      <th scope="col" class="text-center"><strong>QUANTITY</strong></th>
+                      <th scope="col" class="text-right"><strong>UNIT PRICE</strong></th>
+                      <th scope="col" class="text-right"><strong>SUBTOTAL</strong></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {{ invoice_item_formset.management_form }}
+
+                    {% for invoice_item in invoice_item_formset %}
+                    <tr class="item-formset">
+                      <th scope="row">{{ forloop.counter }}</th>
+
+                      <td>
+                      {{ invoice_item.description|add_class:"form-control" }}
+                      <br>
+                      {{ invoice_item.details|add_class:"form-control" }}
+                      </td>
+                      <td class="text-center">{{ invoice_item.quantity|add_class:"form-control" }}</td>
+                      <td class="text-end dollar">{{ invoice_item.unit_price|add_class:"form-control" }}</td>
+                      <td class="text-end subtotal dollar" id="subtotal-0">0.00</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="row justify-content-end">
+                <div class="col-2">
+                  <div class="text-end"><strong>Total</strong></div>
+                </div>
+                <div class="col-2">
+                  <strong><div class="text-end dollar" id="total">0.00</div></strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END INVOICE -->
+      </div>
+    </div>
+    <input type="submit" value="Generate Invoice" class="btn btn-success"/>
+  </div>
+</form>
+</body>
+</html>

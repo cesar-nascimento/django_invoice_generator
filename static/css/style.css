@@ -1,0 +1,54 @@
+.invoice {
+    padding: 30px;
+}
+
+.invoice h2 {
+	margin-top: 0px;
+	line-height: 0.8em;
+}
+
+.invoice .small {
+	font-weight: 300;
+}
+
+.invoice hr {
+	margin-top: 10px;
+	border-color: #ddd;
+}
+
+.invoice .identity {
+	margin-top: 10px;
+	font-size: 1.1em;
+	font-weight: 300;
+}
+
+.invoice .identity strong {
+	font-weight: 600;
+}
+
+
+.grid {
+    position: relative;
+	width: 100%;
+	border-radius: 2px;
+	margin-bottom: 25px;
+	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+.dollar::before {
+    content: '$';
+}
