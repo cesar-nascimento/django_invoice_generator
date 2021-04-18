@@ -1,24 +1,3 @@
-$('.item-formset').formset({
-    addText: 'add item',
-    deleteText: 'remove',
-    added: function (row) {
-      let index = row[0].rowIndex;
-
-      let thead_element = row[0].querySelector('th');
-      thead_element.innerHTML = index;
-
-      let index_zero_start = index - 1;
-      let quantity_element = row[0].querySelector('td:nth-of-type(2)');
-      quantity_element.addEventListener('input', function(){calc(index_zero_start);});
-
-      let price_element = row[0].querySelector("td:nth-of-type(3)");
-      price_element.addEventListener('input', function(){calc(index_zero_start);});
-
-      let subtotal = row[0].querySelector("td:nth-of-type(4)");
-      subtotal.setAttribute("id", "subtotal-" + index_zero_start);
-
-    },
-});
 function calc(index) {
   let price = parseFloat(document.getElementById("id_form-"+index+"-quantity").value)*
               parseFloat(document.getElementById("id_form-"+index+"-unit_price").value);
@@ -45,5 +24,26 @@ window.onload=function() {
 
     // read the image file as a data URL.
     reader.readAsDataURL(this.files[0]);
-};
+  };
+  $('.item-formset').formset({
+    addText: 'add item',
+    deleteText: 'remove',
+    added: function (row) {
+      let index = row[0].rowIndex;
+
+      let thead_element = row[0].querySelector('th');
+      thead_element.innerHTML = index;
+
+      let index_zero_start = index - 1;
+      let quantity_element = row[0].querySelector('td:nth-of-type(2)');
+      quantity_element.addEventListener('input', function(){calc(index_zero_start);});
+
+      let price_element = row[0].querySelector("td:nth-of-type(3)");
+      price_element.addEventListener('input', function(){calc(index_zero_start);});
+
+      let subtotal = row[0].querySelector("td:nth-of-type(4)");
+      subtotal.setAttribute("id", "subtotal-" + index_zero_start);
+
+    },
+});
 }
