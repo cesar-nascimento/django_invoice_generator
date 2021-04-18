@@ -1,1 +1,1 @@
-"web: gunicorn django_invoice_generator.wsgi --log-file -" 
+web: gunicorn django_invoice_generator.wsgi
